@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2>{{ prompt['title'] }}</h2>
+    <p>{{ prompt['body'] }}</p>
+
+    {{ variables }}
+    <section>
+        <h3>Use the app</h3>
+        <form method="post" enctype="multipart/form-data">
+            <label for="file">csv</label>
+            <input type="file" name="file" accept=".csv" id="file"/>
+            
+            {% for variable in variables %}
+                <div class="csv-mapping">
+                    <label for="{{ variable }}">{{ variable }}</label>
+                    <select name="{{ variable }}" id="{{ variable }}">
+                    </select>
+                </div>
+            {% endfor %}
+
+            <input type="submit" value="upload"/>
+        </form>
+    </section>
+
+    <script>
+        const fileElement = document.getElementById('file');
+        const reader = new FileReader();
+
+
+        fileElement.addEventListener("change", (e) => {
+            const fileList = e.target.files;
+            const file = fileList[0];
+            reader.readAsText(file);
+        });
+
+        reader.addEventListener("load", (e) => {
+            const result = e.target.result;
+            const headers = result.split(/\r?\n/)[0].split(/,/);
+
+            const mappingOptions = document.querySelectorAll(".csv-mapping select");
+
+            mappingOptions.forEach((mappingOption) => {
+                mappingOption.innerHTML = "";// clear all the options
+                mappingOption.value = "";
+
+                headers.forEach(header => {
+                    mappingOption.add(new Option(header));
+                });
+            });
+        });
+
+        fetch("{{ url_for('prompt.use_prompt', id=prompt['id']) }}", {
+            method: "POST",
+        })
+            .then(res => res.text)
+            .then(data => console.log(data));
+    </script>
+{% endblock %}

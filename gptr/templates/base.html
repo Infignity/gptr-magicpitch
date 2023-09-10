@@ -1,0 +1,16 @@
+<!doctype html>
+<title>{% block title %}{% endblock %}</title>
+
+<!-- simple CSS -->
+<link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
+
+<header>
+    <nav>
+        <a href="{{ url_for('index') }}">Home</a>
+        <a href="{{ url_for('prompt.create') }}">Create new app</a>
+    </nav>
+</header>
+
+<div>
+    {% block content %}{% endblock %}
+</div>  
