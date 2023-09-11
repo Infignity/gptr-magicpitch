@@ -60,4 +60,4 @@ jobs:
         with:
           app-name: 'gptr-magicpitch'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_0E120E5F716745298206B2529F27D5DA }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_4A6FE14C90ED486B9BAB3C27BD059AFF }}
