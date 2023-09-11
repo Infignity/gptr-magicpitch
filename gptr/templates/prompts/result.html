@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="notice">
+        <h1 class="hero-header">IN PROGRESS</h1>
+        <h2 class="hero-subheader">ID: {{ id }}</h2>
+        <a href="" class="big blue button hide" id="download">Download file</a>
+    </div>
+    <script>
+        const heroHeader = document.querySelector('.hero-header');
+        const downloadButton = document.querySelector('#download');
+
+        const poll = () => {
+            fetch(`{{ url_for('prompt.jobs_result', id=id) }}`)
+              .then(response => response.json())
+              .then(data => {
+
+                if (!data["ready"]) {
+                  setTimeout(poll, 1000)
+                } else if (!data["successful"]) {
+                  console.error(data)
+                } else if(data['ready']) {
+                    heroHeader.textContent = "COMPLETE";
+                    downloadButton.style.display = 'inline-block';
+                    downloadButton.setAttribute('href', data["value"]);
+                } else {
+                  conosle.error(data)
+                }
+              })
+          }
+
+        poll();
+
+
+    </script>
+{% endblock %}

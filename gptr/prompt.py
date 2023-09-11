@@ -5,7 +5,9 @@ from flask import (Blueprint, flash, g, render_template, send_from_directory,
 from werkzeug.utils import secure_filename
 from gptr.db import get_db
 
-import re, time
+import re, random
+from . import tasks
+from celery.result import AsyncResult
 
 bp = Blueprint('prompt', __name__)
 
@@ -86,16 +88,42 @@ def use_prompt(id):
             return redirect(request.url)
             
         if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
-            
-            print(request.form)
-            time.sleep(10)
-            return redirect(url_for('prompt.download_file', name=filename))
+            # random int to prevent overwrites
+            filename = str(random.randint(100, 999)) + '-' + secure_filename(file.filename)
+            filepath = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
+            file.save(os.path.join(filepath))
+
+            print(filepath, prompt, variables, request.form)
+            job = tasks.generate_output.delay(filepath, prompt['body'], list(variables), request.form)
+
+            return redirect(url_for('prompt.task_result', id=job))
     
     return render_template('prompts/use.html', prompt=prompt, variables=variables)
 
 
-@bp.route('/uploads/<name>')
-def download_file(name):
-    return send_from_directory(current_app.config['UPLOAD_FOLDER'], name)
+@bp.get('/result/<id>')
+def task_result(id):
+    result = AsyncResult(id)
+    ready = {
+        "ready": result.ready(),
+        "successful": result.successful(),
+        "value": result.result if result.ready() else None,
+    }
+    return render_template('prompts/result.html', id=id)
+
+
+
+
+@bp.route('/jobs/<id>')
+def jobs_result(id):
+    result = AsyncResult(id)
+    ready = result.ready()
+    return {
+        "ready": ready,
+        "successful": result.successful() if ready else None,
+        "value": url_for("prompt.download_file", filename=result.result) if ready else result.result,
+    }
+
+@bp.get('/download/<filename>')
+def download_file(filename):
+    return send_from_directory(current_app.config["UPLOAD_FOLDER"], filename)

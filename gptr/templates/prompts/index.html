@@ -3,11 +3,19 @@
 
 {% block content %}
 <h2>Apps</h2>
+<section class="apps">
     {% for prompt in prompts %}
-            <article>
-                <h2>{{ prompt['title'] }}</h2>
-                <p>{{ prompt['body'] }}</p>
-                <a href="{{ url_for('prompt.use_prompt', id=prompt['id']) }}">use</a>
-            </article>
+            <div class="package">
+                <div class="package-icon">📄</div>
+                <div class="package-data">
+                <section>
+                    <h1 class="heading">{{ prompt['title'] }}</h1>
+                    <!-- <p>{{ prompt['body'] }}</p> -->
+                    <a href="{{ url_for('prompt.use_prompt', id=prompt['id']) }}" class="blue button use">use</a>
+                    <p class="module-desc">{{ prompt['body'][:100] }}...</p>
+            </section>
+        </div>
+            </div>
     {% endfor %}
+</section>
 {% endblock %}

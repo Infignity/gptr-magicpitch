@@ -1,12 +1,14 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h2>{{ prompt['title'] }}</h2>
-    <p>{{ prompt['body'] }}</p>
-
-    {{ variables }}
-    <section>
-        <h3>Use the app</h3>
+{% for message in get_flashed_messages() %}
+<span class="warning">⚠️ {{ message }}</span>
+{% endfor %}
+    <h3>{{ prompt['title'] }}</h3>
+    <p>{{ prompt['body'][:200] }}...</p>
+    
+    <section class="use-section">
+        <h2>Use this app</h2>
         <form method="post" enctype="multipart/form-data">
             <label for="file">csv</label>
             <input type="file" name="file" accept=".csv" id="file"/>
@@ -19,7 +21,7 @@
                 </div>
             {% endfor %}
 
-            <input type="submit" value="upload"/>
+            <input type="submit" value="upload" class="button blue"/>
         </form>
     </section>
 
@@ -49,11 +51,5 @@
                 });
             });
         });
-
-        fetch("{{ url_for('prompt.use_prompt', id=prompt['id']) }}", {
-            method: "POST",
-        })
-            .then(res => res.text)
-            .then(data => console.log(data));
     </script>
 {% endblock %}

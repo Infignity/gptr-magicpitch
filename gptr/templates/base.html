@@ -1,16 +1,20 @@
 <!doctype html>
 <title>{% block title %}{% endblock %}</title>
 
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:400,700|Maven+Pro:400,700,900|Montserrat:400,700|PT+Mono&amp;display=swap">
 <!-- simple CSS -->
-<link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css')}}">
 
-<header>
-    <nav>
-        <a href="{{ url_for('index') }}">Home</a>
-        <a href="{{ url_for('prompt.create') }}">Create new app</a>
-    </nav>
-</header>
-
-<div>
-    {% block content %}{% endblock %}
-</div>  
+<body>
+    <div class="wrapper">
+        <header>
+            <nav>
+                <a href="{{ url_for('index') }}">Home</a>
+                <a href="{{ url_for('prompt.create') }}" class="red button create-new">Create new app</a>
+            </nav>
+        </header>
+        <div>
+            {% block content %}{% endblock %}
+        </div>
+    </div>
+</body>

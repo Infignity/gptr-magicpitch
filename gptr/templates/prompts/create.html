@@ -1,16 +1,25 @@
 {% extends 'base.html' %}
 {% block content %}
-    <h1>New Prompt</h1>
+    <div class="card">
+        <section>
+        <h1>New Prompt</h1>
+        <form method="post" class="form-fields">
+            {% for message in get_flashed_messages() %}
+                <span class="warning">⚠️ {{ message }}</span>
+            {% endfor %}
+            <div>
+                <label for="title">Title (required)</label>
+                <input name="title" id="title" placeholder="Title of the prompt" value="{{ request.form['title'] }}" required>
+            </div>
 
-    {% for message in get_flashed_messages() %}
-        <div class="flash">{{ message }}</div>
-    {% endfor %}
-
-    <form method="post">
-        <label for="title">Title (required)</label>
-        <input name="title" id="title" value="{{ request.form['title'] }}" required><br>
-        <label for="body">Body</label>
-        <textarea name="body" id="body" required>{{ request.form['body'] }}</textarea><br>
-        <input type="submit" value="Save">
-    </form>
+            <div>
+                <label for="body">Body</label>
+                <textarea name="body" id="body" placeholder="Prompt">{{ request.form['body'] }}</textarea>
+            </div>
+            <button type="submit" value="Save" class="button blue">Save</button>
+            
+        </form>
+    </div>
+    </section>
+    </div>
 {% endblock %}
