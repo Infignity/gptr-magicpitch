@@ -8,9 +8,9 @@ from gptr.api_request_parallel_processor import process_api_requests_from_file
 import asyncio
 import logging
 
-# NOTE: Heavy mental gymnastics here, have to refactor :)
-api_key = "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"
+api_key = os.environ.get("OPENAI_KEY")
 
+# NOTE: Heavy mental gymnastics here, have to refactor :)
 @shared_task(ignore_result=False)
 def generate_output(file, prompt, variables, form):
     df = pd.read_csv(file)
