@@ -13,8 +13,8 @@ def create_app(test_config=None):
         UPLOAD_FOLDER=os.path.join(app.instance_path, 'uploads'),
         DATABASE=os.path.join(app.instance_path, 'gptr.sqlite'),
         CELERY=dict(
-            broker_url="rediss://:b8tTcvzWxs0s6wp2cCpWX9K9rg9dqQ2wcAzCaNPL2vI=@pintercache.redis.cache.windows.net:6380",
-            result_backend="rediss://:b8tTcvzWxs0s6wp2cCpWX9K9rg9dqQ2wcAzCaNPL2vI=@pintercache.redis.cache.windows.net:6380",
+            broker_url=os.environ.get('REDIS_URL'),
+            result_backend=os.environ.get('REDIS_URL'),
             task_ignore_result=True,
             broker_use_ssl={
                 'ssl_cert_reqs': ssl.CERT_REQUIRED
