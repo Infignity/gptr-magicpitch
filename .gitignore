@@ -16,3 +16,5 @@ build/
 *.rdb
 .env
 .vscode
+
+.DS_Store

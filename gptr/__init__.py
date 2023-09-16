@@ -5,8 +5,11 @@ from flask import Flask
 from celery import Celery
 from celery import Task
 
+from dotenv import load_dotenv
+
 
 def create_app(test_config=None):
+    load_dotenv()
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_mapping(
         SECRET_KEY='dev',
